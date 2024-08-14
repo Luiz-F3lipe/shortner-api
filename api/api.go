@@ -56,7 +56,15 @@ func handlePostShortner(db map[string]string) http.HandlerFunc {
 
 func handleGetShortner(db map[string]string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		code := chi.URLParam(r, "code")
 
+		url, ok := db[code]
+		if !ok {
+			http.Error(w, "url not found", http.StatusNotFound)
+			return
+		}
+
+		http.Redirect(w, r, url, http.StatusPermanentRedirect)
 	}
 }
 
